@@ -1,43 +1,3 @@
-import requests
-
-
-API_KEY = "10QtOAXvqROOpvT7TeE8559W0TenbqBnfpzNFHW5"
-API_URL = "https://api.api-ninjas.com/v1/animals"
-
-
-def load_data(animal_name):
-    """Load animal data from API."""
-
-    try:
-        response = requests.get(
-            API_URL,
-            headers={"X-Api-Key": API_KEY},
-            params={"name": animal_name},
-            timeout=30
-        )
-
-        response.raise_for_status()
-        return response.json()
-
-    except requests.exceptions.RequestException as error:
-        print(f"API request failed: {error}")
-        return []
-
-
-def get_skin_types(data):
-    """Return all available skin types."""
-
-    skin_types = set()
-
-    for animal_obj in data:
-        characteristics = animal_obj.get("characteristics", {})
-
-        if "skin_type" in characteristics:
-            skin_types.add(characteristics["skin_type"])
-
-    return sorted(skin_types)
-
-
 def serialize_animal(animal_obj):
     """Serialize one animal into HTML."""
 
@@ -87,8 +47,8 @@ def generate_animals_html(data, animal_name):
     if not data:
         return (
             '<div class="card">\n'
-            f'  <h2>No results found for "{animal_name}"</h2>\n'
-            '  <p>Perhaps this animal does not exist in the database.</p>\n'
+            f'  <h2>The animal "{animal_name}" doesn\'t exist.</h2>\n'
+            '  <p>Please try another animal name.</p>\n'
             '</div>\n'
         )
 
@@ -100,17 +60,10 @@ def generate_animals_html(data, animal_name):
     return output
 
 
-def main():
-    """Generate animals.html from template and API data."""
+def generate_website(data, animal_name):
+    """Generate animals.html from template and animal data."""
 
-    animal_name = input("Enter a name of an animal: ").strip()
-
-    data = load_data(animal_name)
-
-    animals_html = generate_animals_html(
-        data,
-        animal_name
-    )
+    animals_html = generate_animals_html(data, animal_name)
 
     with open("animals_template.html", "r", encoding="utf-8") as handle:
         html_template = handle.read()
@@ -122,9 +75,3 @@ def main():
 
     with open("animals.html", "w", encoding="utf-8") as handle:
         handle.write(final_html)
-
-    print("Website was successfully generated to the file animals.html.")
-
-
-if __name__ == "__main__":
-    main()
