@@ -5,30 +5,22 @@ API_KEY = "10QtOAXvqROOpvT7TeE8559W0TenbqBnfpzNFHW5"
 API_URL = "https://api.api-ninjas.com/v1/animals"
 
 
-def load_data():
+def load_data(animal_name):
     """Load animal data from API."""
 
     try:
         response = requests.get(
             API_URL,
             headers={"X-Api-Key": API_KEY},
-            params={"name": "fox"},
+            params={"name": animal_name},
             timeout=30
         )
 
         response.raise_for_status()
         return response.json()
 
-    except requests.exceptions.Timeout:
-        print("The API request timed out. Please try again later.")
-        return []
-
-    except requests.exceptions.HTTPError as error:
-        print(f"HTTP error: {error}")
-        return []
-
     except requests.exceptions.RequestException as error:
-        print(f"Request error: {error}")
+        print(f"API request failed: {error}")
         return []
 
 
@@ -103,11 +95,9 @@ def generate_animals_html(data):
 def main():
     """Generate animals.html from template and API data."""
 
-    data = load_data()
+    animal_name = input("Enter a name of an animal: ").strip()
 
-    if not data:
-        print("No animal data received. Website was not created.")
-        return
+    data = load_data(animal_name)
 
     animals_html = generate_animals_html(data)
 
@@ -122,7 +112,7 @@ def main():
     with open("animals.html", "w", encoding="utf-8") as handle:
         handle.write(final_html)
 
-    print("Website created successfully!")
+    print("Website was successfully generated to the file animals.html.")
 
 
 if __name__ == "__main__":
