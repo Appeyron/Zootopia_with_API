@@ -81,8 +81,16 @@ def serialize_animal(animal_obj):
     return output
 
 
-def generate_animals_html(data):
+def generate_animals_html(data, animal_name):
     """Generate HTML for all returned animals."""
+
+    if not data:
+        return (
+            '<div class="card">\n'
+            f'  <h2>No results found for "{animal_name}"</h2>\n'
+            '  <p>Perhaps this animal does not exist in the database.</p>\n'
+            '</div>\n'
+        )
 
     output = ""
 
@@ -99,7 +107,10 @@ def main():
 
     data = load_data(animal_name)
 
-    animals_html = generate_animals_html(data)
+    animals_html = generate_animals_html(
+        data,
+        animal_name
+    )
 
     with open("animals_template.html", "r", encoding="utf-8") as handle:
         html_template = handle.read()
