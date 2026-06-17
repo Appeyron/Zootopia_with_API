@@ -1,3 +1,15 @@
+"""
+Animal Website Generator Module.
+
+This script interacts with the user to get an animal name, fetches relevant
+data about that animal using the `data_fetcher` module, and generates a
+custom HTML webpage using the `animals_web_generator` module.
+
+Usage:
+    Run the script directly from the terminal:
+    $ python <script_names>.py
+"""
+
 import data_fetcher
 import animals_web_generator
 
